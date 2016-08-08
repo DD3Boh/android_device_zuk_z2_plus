@@ -114,6 +114,13 @@ PRODUCT_PACKAGES += \
     com.quicinc.cne \
     services-ext
 
+# Charger
+PRODUCT_PACKAGES += \
+    charger_res_images \
+    cm_charger_res_images \
+    font_log.png \
+    libhealthd.cm
+
 # Display
 PRODUCT_PACKAGES += \
     copybit.msm8996 \
