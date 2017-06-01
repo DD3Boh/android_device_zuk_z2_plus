@@ -1155,7 +1155,8 @@ service hcidump /system/bin/sh /system/etc/hcidump.sh
 
 service charger /charger
     class charger
-    group system graphics
+    critical
+    group log system graphics
     seclabel u:r:healthd:s0
 
 service ssr_diag /system/bin/ssr_diag
@@ -1179,16 +1180,6 @@ service charger_monitor /system/bin/charger_monitor
     user root
     group root
     disabled
-
-service qbcharger /charger -m 1
-    disabled
-    oneshot
-
-on property:sys.qbcharger.enable=true
-    start qbcharger
-
-on property:sys.qbcharger.enable=false
-    stop qbcharger
 
 service diag_mdlog_start /system/bin/diag_mdlog -c
     class late_start
