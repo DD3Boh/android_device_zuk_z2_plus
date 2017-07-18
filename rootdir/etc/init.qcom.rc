@@ -29,6 +29,18 @@ import init.qcom.usb.rc
 import init.qcom.bt.sh
 import init.target.rc
 
+on charger
+    write /sys/devices/system/cpu/cpu2/online 0
+    write /sys/devices/system/cpu/cpu3/online 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "powersave"
+    write /sys/module/lpm_levels/parameters/sleep_disabled 0
+    wait /dev/block/bootdevice
+  
+service charger /sbin/healthd -c
+    class charger
+    critical
+    seclabel u:r:healthd:s0
+
 on early-init
     mkdir /firmware 0771 system system
     mkdir /bt_firmware 0771 system system
@@ -1246,10 +1258,6 @@ service seemp_healthd /system/vendor/bin/seemp_healthd
     class late_start
     user system
     group system
-
-on charger
-    setprop persist.sys.usb.config charging
-    start hvdcp_opti
     
 #add poweroffhandler
 service poweroffhandler /system/bin/poweroffhandler
