@@ -31,6 +31,8 @@ TARGET_SPECIFIC_HEADER_PATH := $(PLATFORM_PATH)/include
 
 BOARD_VENDOR := zuk
 
+TARGET_USE_CM_RAMDISK := true
+
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
 

@@ -20,10 +20,10 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from z2_plus device
 $(call inherit-product, device/zuk/z2_plus/device.mk)
 
-# Inherit some common AOSP-OMS stuff.
-$(call inherit-product, vendor/xos/config/common.mk)
+# Inherit some common Citrus-CAF stuff.
+$(call inherit-product, vendor/citrus/common.mk)
 
-PRODUCT_NAME := XOS_z2_plus
+PRODUCT_NAME := citrus_z2_plus
 PRODUCT_DEVICE := z2_plus
 PRODUCT_MANUFACTURER := ZUK
 PRODUCT_BRAND := ZUK
@@ -41,3 +41,12 @@ TARGET_VENDOR := zuk
 PRODUCT_BUILD_PROP_OVERRIDES += \
     BUILD_FINGERPRINT="ZUK/z2_plus/z2_plus:7.0/NRD90M/2.5.412_170428:user/release-keys" \
     PRIVATE_BUILD_DESC="z2_plus-user 7.0 NRD90M 2.5.412_170428 release-keys"
+    
+    
+# Citrus-CAF z2_plus Maintainer
+ PRODUCT_BUILD_PROP_OVERRIDES += \
+ DEVICE_MAINTAINERS="Davide Garberi (DD3Boh)"
+
+# Branch
+ PRODUCT_PROPERTY_OVERRIDES += \
+ ro.caf.branch=LA.UM.5.5.r1-05300-8x96.0
