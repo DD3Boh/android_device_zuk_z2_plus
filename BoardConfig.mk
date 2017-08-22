@@ -31,6 +31,11 @@ TARGET_SPECIFIC_HEADER_PATH := $(PLATFORM_PATH)/include
 
 BOARD_VENDOR := zuk
 
+# The prebuilt kernel is needed on aosp
+LOCAL_KERNEL := device/zuk/z2_plus-kernel/Image.gz-dtb
+PRODUCT_COPY_FILES += \
+    $(LOCAL_KERNEL):kernel
+
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
 
