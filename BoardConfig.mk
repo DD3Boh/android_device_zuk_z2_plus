@@ -89,11 +89,11 @@ TARGET_KERNEL_CONFIG := z2_plus_defconfig
 TARGET_KERNEL_SOURCE := kernel/zuk/msm8996
 TARGET_KERNEL_BUILD_VARIANT := user
 
-# QCOM hardware
-BOARD_USES_QCOM_HARDWARE := true
-
 # Webview defs
 PREBUILT_WEBVIEW_VERSION := chromium
+
+# ANT+
+BOARD_ANT_WIRELESS_DEVICE := "qualcomm-uart"
 
 # Audio
 AUDIO_FEATURE_ENABLED_SND_MONITOR := true
@@ -188,9 +188,6 @@ USE_SENSOR_MULTI_HAL := true
 
 # Tap to wake 
 TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/touch/tp_dev/gesture_on"
-
-# Timeservice
-BOARD_USES_QC_TIME_SERVICES := true
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
