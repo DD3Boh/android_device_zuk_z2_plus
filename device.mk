@@ -288,6 +288,10 @@ PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
     sensors.msm8996
 
+# Vibrator
+PRODUCT_PACKAGES += \
+    android.hardware.vibrator@1.0-impl
+    
 # Wifi HAL
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service
