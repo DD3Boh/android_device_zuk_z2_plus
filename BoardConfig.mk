@@ -78,9 +78,7 @@ BOARD_KERNEL_CMDLINE := \
 	ehci-hcd.park=3 \
 	lpm_levels.sleep_disabled=1 \
 	cma=32M@0-0xffffffff \
-	androidboot.selinux=enforcing \
-	androidboot.verifiedbootstate=green \
-	androidboot.veritymode=enforcing
+	androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
@@ -92,7 +90,6 @@ TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 TARGET_KERNEL_CONFIG := z2_plus_defconfig
 TARGET_KERNEL_SOURCE := kernel/zuk/msm8996
-TARGET_KERNEL_BUILD_VARIANT := user
 
 # Webview defs
 PREBUILT_WEBVIEW_VERSION := chromium
@@ -184,9 +181,8 @@ OVERRIDE_RS_DRIVER:= libRSDriver_adreno.so
 USE_OPENGL_RENDERER := true
 
 # SELinux
-include device/qcom/sepolicy/sepolicy.mk
-
-BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
+# include device/qcom/sepolicy/sepolicy.mk
+# BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
 
 # Sensors
 USE_SENSOR_MULTI_HAL := true
