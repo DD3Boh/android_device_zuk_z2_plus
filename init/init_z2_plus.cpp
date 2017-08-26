@@ -35,6 +35,10 @@
 #include "vendor_init.h"
 #include "log.h"
 #include "util.h"
+#include <android-base/properties.h>
+
+namespace android {
+namespace init {
 
 char const *heapminfree;
 char const *heapmaxfree;
@@ -64,9 +68,9 @@ static void init_alarm_boot_properties()
      * 8 -> KPDPWR_N pin toggled (power key pressed)
      */
      if (boot_reason == 3) {
-        property_set("ro.alarm_boot", "true");
+        android::base::SetProperty("ro.alarm_boot", "true");
      } else {
-        property_set("ro.alarm_boot", "false");
+        android::base::SetProperty("ro.alarm_boot", "false");
      }
 }
 
@@ -92,21 +96,23 @@ void vendor_load_properties() {
     char rf_version[PROP_VALUE_MAX];
     int rc;
 
-    rc = property_get("ro.product.device", device, NULL);
+    rc = android::base::GetProperty("ro.product.device", device, NULL);
     if (!rc || strncmp(device, "z2_plus", PROP_VALUE_MAX))
         return;
 
-        property_set("ro.product.model", "Z2 Plus");
+        android::base::SetProperty("ro.product.model", "Z2 Plus");
     
     check_ram();
 
-    property_set("dalvik.vm.heapstartsize", "8m");
-    property_set("dalvik.vm.heapgrowthlimit", "256m");
-    property_set("dalvik.vm.heapsize", "512m");
-    property_set("dalvik.vm.heaptargetutilization", "0.75");
-    property_set("dalvik.vm.heapminfree", heapminfree);
-    property_set("dalvik.vm.heapmaxfree", heapmaxfree);
+    android::base::SetProperty("dalvik.vm.heapstartsize", "8m");
+    android::base::SetProperty("dalvik.vm.heapgrowthlimit", "256m");
+    android::base::SetProperty("dalvik.vm.heapsize", "512m");
+    android::base::SetProperty("dalvik.vm.heaptargetutilization", "0.75");
+    android::base::SetProperty("dalvik.vm.heapminfree", heapminfree);
+    android::base::SetProperty("dalvik.vm.heapmaxfree", heapmaxfree);
 
     init_alarm_boot_properties();
 }
 
+}  // namespace init
+}  // namespace android
