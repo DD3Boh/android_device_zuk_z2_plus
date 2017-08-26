@@ -72,6 +72,15 @@ TARGET_SCREEN_WIDTH := 1080
 # Haters gonna hate..
 PRODUCT_CHARACTERISTICS := nosdcard
 
+# Required to make aosp Oreo building
+define is-platform-sdk-version-at-least
+$(strip \
+  $(if $(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) >= $(1) ))" )), \
+    true, \
+  ) \
+)
+endef
+
 # Audio
 PRODUCT_PACKAGES += \
     audio.primary.msm8996 \
