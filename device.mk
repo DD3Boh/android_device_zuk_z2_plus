@@ -219,7 +219,7 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    lights.msm8996
+    lights.$(TARGET_DEVICE)
 
 # LiveDisplay native
 PRODUCT_PACKAGES += \
