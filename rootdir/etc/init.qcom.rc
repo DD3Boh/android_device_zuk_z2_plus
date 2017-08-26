@@ -27,7 +27,6 @@
 import init.qcom.power.rc
 import init.qcom.usb.rc
 import init.qcom.bt.sh
-import init.target.rc
 
 on early-init
     mkdir /firmware 0771 system system
@@ -36,13 +35,15 @@ on early-init
     mkdir /dsp 0771 media media
     mount debugfs debugfs /sys/kernel/debug
     chmod 0755 /sys/kernel/debug
+    
+    write /sys/module/msm_performance/parameters/cpu_max_freq "0:1300000 1:1300000 2:1300000 3:1300000"
 
     # Setup zram options
     write /sys/block/zram0/comp_algorithm lz4
 
 on init
 
-    export LD_SHIM_LIBS /system/vendor/lib64/libizat_core.so:libshims_get_process_name.so
+    export LD_SHIM_LIBS /system/vendor/lib64/lib-imsvt.so|libshims_ims.so:/system/vendor/lib64/libizat_core.so|libshims_get_process_name.so
     # Set permissions for persist partition
     mkdir /persist 0771 system system
 
@@ -72,8 +73,32 @@ on early-boot
     write /sys/kernel/boot_slpi/boot 1
 
 on fs
-    wait /dev/block/bootdevice
+    wait /dev/block/platform/soc/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
     mount_all fstab.qcom
+    swapon_all fstab.qcom
+
+    # Keeping following partitions outside fstab file. As user may not have
+    # these partition flashed on the device. Failure to mount any partition in fstab file
+    # results in failure to launch late-start class.
+
+    wait /dev/block/bootdevice/by-name/cache
+    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
+
+    wait /dev/block/bootdevice/by-name/persist
+    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
+    mkdir /persist/data 0700 system system
+    mkdir /persist/bms 0700 root system
+    restorecon_recursive /persist
+
+    wait /dev/block/bootdevice/by-name/dsp
+    mount ext4 /dev/block/bootdevice/by-name/dsp /dsp nosuid nodev barrier=1
+
+    wait /dev/block/bootdevice/by-name/modem
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    wait /dev/block/bootdevice/by-name/bluetooth
+    mount vfat /dev/block/bootdevice/by-name/bluetooth /bt_firmware ro shortname=lower,uid=1002,gid=3002,dmask=227,fmask=337
 
 on boot
 
@@ -83,6 +108,9 @@ on boot
     chown system drmrpc /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch_enable
     chown system drmrpc /sys/devices/soc/75ba000.i2c/i2c-12/12-004a/secure_touch
     write /sys/devices/soc/75ba000.i2c/i2c-12/12-0020/input/input0/update_fw 1
+    
+    # Wifi firmware reload path
+    chown wifi wifi /sys/module/wlan/parameters/fwpath
 
     # Torch
     chown system system /sys/class/leds/led:torch_0/brightness
@@ -506,13 +534,6 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     class main
     user camera
     group camera system inet input graphics
-    writepid /dev/cpuset/system-background/tasks
-
-# fingerprint service
-service fingerprintd /system/bin/fingerprintd
-    class late_start
-    user system
-    group system
     writepid /dev/cpuset/system-background/tasks
 
 service qvop-daemon /system/bin/qvop-daemon
